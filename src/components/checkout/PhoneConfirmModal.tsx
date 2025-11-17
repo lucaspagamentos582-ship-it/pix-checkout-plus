@@ -78,7 +78,7 @@ export const PhoneConfirmModal = ({
           <Button
             type="button"
             onClick={handleConfirm}
-            className="w-full sm:w-auto bg-gradient-to-r from-primary to-primary/90"
+            className="w-full sm:w-auto"
           >
             Confirmar e Continuar
           </Button>

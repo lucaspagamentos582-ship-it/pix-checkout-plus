@@ -29,8 +29,8 @@ export const PixPayment = ({ amount, customerName }: PixPaymentProps) => {
   return (
     <Card className="p-6">
       <div className="flex items-center justify-center mb-6">
-        <div className="bg-success/10 rounded-full p-3">
-          <CheckCircle className="h-8 w-8 text-success" />
+        <div className="bg-primary/10 rounded-full p-3">
+          <CheckCircle className="h-8 w-8 text-primary" />
         </div>
       </div>
       
@@ -67,7 +67,7 @@ export const PixPayment = ({ amount, customerName }: PixPaymentProps) => {
       >
         {copied ? (
           <>
-            <CheckCircle className="mr-2 h-4 w-4 text-success" />
+            <CheckCircle className="mr-2 h-4 w-4 text-primary" />
             Código Copiado!
           </>
         ) : (
@@ -78,11 +78,11 @@ export const PixPayment = ({ amount, customerName }: PixPaymentProps) => {
         )}
       </Button>
 
-      <div className="mt-6 p-4 bg-accent rounded-lg">
-        <p className="text-sm text-center text-accent-foreground">
+      <div className="mt-6 p-4 bg-secondary/20 rounded-lg border-2 border-secondary">
+        <p className="text-sm text-center text-foreground">
           <span className="font-semibold">Valor a pagar:</span>
           <br />
-          <span className="text-2xl font-bold text-success">
+          <span className="text-2xl font-bold text-primary">
             R$ {amount.toFixed(2)}
           </span>
         </p>

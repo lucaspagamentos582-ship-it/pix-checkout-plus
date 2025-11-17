@@ -151,7 +151,7 @@ export const CheckoutForm = ({ onCustomerDataFilled }: CheckoutFormProps) => {
 
         <Button 
           type="submit" 
-          className="w-full bg-gradient-to-r from-primary to-primary/90"
+          className="w-full"
           disabled={isLoading}
         >
           {isLoading ? (

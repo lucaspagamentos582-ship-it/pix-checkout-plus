@@ -3,7 +3,7 @@ import { CheckoutForm } from "@/components/checkout/CheckoutForm";
 import { OrderSummary } from "@/components/checkout/OrderSummary";
 import { PhoneConfirmModal } from "@/components/checkout/PhoneConfirmModal";
 import { PixPayment } from "@/components/checkout/PixPayment";
-import { ShoppingBag } from "lucide-react";
+import logo from "@/assets/logo.png";
 
 interface CustomerData {
   name: string;
@@ -32,16 +32,18 @@ const Index = () => {
   const totalAmount = 214.80; // Subtotal (199.70) + Frete (15.00)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/20">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/10">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-center mb-8">
-          <div className="flex items-center gap-3">
-            <div className="bg-primary/10 rounded-full p-3">
-              <ShoppingBag className="h-8 w-8 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">Checkout Seguro</h1>
+          <div className="flex flex-col items-center gap-4">
+            <img 
+              src={logo} 
+              alt="Logo" 
+              className="h-20 w-auto drop-shadow-lg"
+            />
+            <div className="text-center">
+              <h1 className="text-3xl font-bold text-navy">Checkout Seguro</h1>
               <p className="text-muted-foreground">Finalize sua compra com PIX</p>
             </div>
           </div>
@@ -78,7 +80,7 @@ const Index = () => {
         {/* Footer */}
         <div className="mt-12 text-center">
           <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-            <div className="h-1 w-1 rounded-full bg-success animate-pulse" />
+            <div className="h-1 w-1 rounded-full bg-primary animate-pulse" />
             <span>Ambiente 100% seguro</span>
           </div>
         </div>
