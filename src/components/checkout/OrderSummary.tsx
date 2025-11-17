@@ -9,14 +9,12 @@ interface OrderItem {
 }
 
 const mockItems: OrderItem[] = [
-  { id: "1", name: "Produto Premium", price: 99.90, quantity: 1 },
-  { id: "2", name: "Produto Standard", price: 49.90, quantity: 2 },
+  { id: "1", name: "TX54114854", price: 214.80, quantity: 1 },
 ];
 
 export const OrderSummary = () => {
   const subtotal = mockItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-  const shipping = 15.00;
-  const total = subtotal + shipping;
+  const total = subtotal;
 
   return (
     <Card className="p-6 sticky top-4">
@@ -27,7 +25,7 @@ export const OrderSummary = () => {
           <div key={item.id} className="flex justify-between items-start">
             <div className="flex-1">
               <p className="font-medium text-foreground">{item.name}</p>
-              <p className="text-sm text-muted-foreground">Qtd: {item.quantity}</p>
+              <p className="text-sm text-muted-foreground">Taxa Alfandegária</p>
             </div>
             <p className="font-medium text-foreground">
               R$ {(item.price * item.quantity).toFixed(2)}
@@ -37,20 +35,8 @@ export const OrderSummary = () => {
         
         <Separator />
         
-        <div className="flex justify-between text-sm">
-          <span className="text-muted-foreground">Subtotal</span>
-          <span className="text-foreground">R$ {subtotal.toFixed(2)}</span>
-        </div>
-        
-        <div className="flex justify-between text-sm">
-          <span className="text-muted-foreground">Frete</span>
-          <span className="text-foreground">R$ {shipping.toFixed(2)}</span>
-        </div>
-        
-        <Separator />
-        
         <div className="flex justify-between items-center pt-2">
-          <span className="text-lg font-bold text-foreground">Total</span>
+          <span className="text-lg font-bold text-foreground">Total a Pagar</span>
           <span className="text-2xl font-bold text-primary">
             R$ {total.toFixed(2)}
           </span>
