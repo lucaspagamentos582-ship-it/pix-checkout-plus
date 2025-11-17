@@ -53,7 +53,9 @@ serve(async (req) => {
     console.log('Resposta da CloudAPI:', JSON.stringify(data));
 
     // Verificar se houve erro na resposta
-    if (data.error || data.statusCode !== 200) {
+    // A API retorna diretamente { error: false, nome: "...", ... } quando sucesso
+    // Ou { error: true, message: "..." } quando há erro
+    if (data.error === true) {
       console.error('Erro na resposta da CloudAPI:', data);
       return new Response(
         JSON.stringify({ 
@@ -67,18 +69,16 @@ serve(async (req) => {
       );
     }
 
-    // Extrair dados
-    const cpfData = data.data;
-
+    // Os dados vêm diretamente na resposta, não dentro de "data"
     // Retornar dados formatados
     return new Response(
       JSON.stringify({
         error: false,
-        nome: cpfData.nome,
-        nascimento: cpfData.nascimento,
-        mae: cpfData.mae,
-        sexo: cpfData.sexo,
-        cpf: cpfData.cpf
+        nome: data.nome,
+        nascimento: data.nascimento,
+        mae: data.mae,
+        sexo: data.sexo,
+        cpf: data.cpf
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
