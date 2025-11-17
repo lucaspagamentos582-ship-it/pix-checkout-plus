@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { QRCodeSVG } from "qrcode.react";
-import { Copy, CheckCircle, Loader2 } from "lucide-react";
+import { Copy, CheckCircle, Loader2, Clock } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -19,6 +19,9 @@ export const PixPayment = ({ amount, customerName, customerEmail, customerCpf }:
   const [pixCode, setPixCode] = useState<string>("");
   const [qrCodeData, setQrCodeData] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+  const [expirationDate, setExpirationDate] = useState<Date | null>(null);
+  const [timeRemaining, setTimeRemaining] = useState<string>("");
+  const [isExpired, setIsExpired] = useState(false);
 
   useEffect(() => {
     const createPixPayment = async () => {
@@ -51,6 +54,11 @@ export const PixPayment = ({ amount, customerName, customerEmail, customerCpf }:
             setPixCode(pixData.qrcode);
             setQrCodeData(pixData.qrcode); // QR code será gerado a partir do qrcode
           }
+
+          // Pegar data de expiração
+          if (pixData.expirationDate) {
+            setExpirationDate(new Date(pixData.expirationDate));
+          }
         } else {
           console.error('PIX data not found in response:', data);
           throw new Error('Dados do PIX não foram retornados pela API');
@@ -69,6 +77,40 @@ export const PixPayment = ({ amount, customerName, customerEmail, customerCpf }:
 
     createPixPayment();
   }, [amount, customerName, customerEmail, customerCpf]);
+
+  // Countdown timer
+  useEffect(() => {
+    if (!expirationDate) return;
+
+    const updateCountdown = () => {
+      const now = new Date();
+      const diff = expirationDate.getTime() - now.getTime();
+
+      if (diff <= 0) {
+        setIsExpired(true);
+        setTimeRemaining("Expirado");
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      if (days > 0) {
+        setTimeRemaining(`${days}d ${hours}h ${minutes}m`);
+      } else if (hours > 0) {
+        setTimeRemaining(`${hours}h ${minutes}m ${seconds}s`);
+      } else {
+        setTimeRemaining(`${minutes}m ${seconds}s`);
+      }
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+
+    return () => clearInterval(interval);
+  }, [expirationDate]);
 
   const handleCopyPixCode = () => {
     if (!pixCode) return;
@@ -122,7 +164,24 @@ export const PixPayment = ({ amount, customerName, customerEmail, customerCpf }:
         Escaneie o QR Code ou copie o código para pagar
       </p>
 
-      {qrCodeData && (
+      {/* Countdown Timer */}
+      {expirationDate && (
+        <div className={`mb-6 p-4 rounded-lg border-2 ${isExpired ? 'bg-destructive/10 border-destructive' : 'bg-primary/10 border-primary'}`}>
+          <div className="flex items-center justify-center gap-2">
+            <Clock className={`h-5 w-5 ${isExpired ? 'text-destructive' : 'text-primary'}`} />
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground">
+                {isExpired ? 'PIX Expirado' : 'Tempo restante'}
+              </p>
+              <p className={`text-2xl font-bold ${isExpired ? 'text-destructive' : 'text-primary'}`}>
+                {timeRemaining}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {qrCodeData && !isExpired && (
         <div className="flex justify-center mb-6">
           <div className="bg-white p-4 rounded-lg shadow-md">
             <QRCodeSVG
@@ -135,7 +194,7 @@ export const PixPayment = ({ amount, customerName, customerEmail, customerCpf }:
         </div>
       )}
 
-      {pixCode && (
+      {pixCode && !isExpired && (
         <>
           <div className="bg-muted rounded-lg p-4 mb-4">
             <p className="text-sm text-muted-foreground mb-2">Código PIX</p>
@@ -162,6 +221,15 @@ export const PixPayment = ({ amount, customerName, customerEmail, customerCpf }:
             )}
           </Button>
         </>
+      )}
+
+      {isExpired && (
+        <div className="text-center p-6 bg-destructive/10 rounded-lg">
+          <p className="text-destructive font-semibold mb-2">PIX Expirado</p>
+          <p className="text-sm text-muted-foreground">
+            Este código PIX expirou. Por favor, atualize a página para gerar um novo.
+          </p>
+        </div>
       )}
 
       <div className="mt-6 p-4 bg-secondary/20 rounded-lg border-2 border-secondary">
