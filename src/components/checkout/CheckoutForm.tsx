@@ -82,8 +82,11 @@ export const CheckoutForm = ({ onCustomerDataFilled }: CheckoutFormProps) => {
   };
 
   return (
-    <Card className="p-6">
-      <h2 className="text-2xl font-bold mb-6 text-foreground">Informações do Cliente</h2>
+    <Card className="p-8 shadow-lg border-2 border-border/50 bg-card/95 backdrop-blur-sm">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-navy mb-2">Informações do Cliente</h2>
+        <p className="text-sm text-muted-foreground">Preencha seus dados para prosseguir</p>
+      </div>
       
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
@@ -151,12 +154,12 @@ export const CheckoutForm = ({ onCustomerDataFilled }: CheckoutFormProps) => {
 
         <Button 
           type="submit" 
-          className="w-full"
+          className="w-full h-12 text-base font-semibold bg-gradient-to-r from-blue to-blue/90 hover:from-blue/90 hover:to-blue shadow-blue transition-all duration-300 hover:scale-[1.02]"
           disabled={isLoading}
         >
           {isLoading ? (
             <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
               Buscando dados...
             </>
           ) : (
