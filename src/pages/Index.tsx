@@ -58,6 +58,8 @@ const Index = () => {
               <PixPayment 
                 amount={totalAmount}
                 customerName={customerData?.name || "Cliente"}
+                customerEmail={customerData?.email || ""}
+                customerCpf={customerData?.cpf || ""}
               />
             )}
           </div>
