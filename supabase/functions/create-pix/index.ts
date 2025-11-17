@@ -23,38 +23,53 @@ serve(async (req) => {
     
     console.log('Creating PIX payment for:', { amount, customerName, customerEmail });
 
-    const secretKey = Deno.env.get('GHOSTSPAY_SECRET_KEY');
-    const companyId = Deno.env.get('GHOSTSPAY_COMPANY_ID');
+    const publicKey = Deno.env.get('FUSIONPAY_PUBLIC_KEY');
+    const secretKey = Deno.env.get('FUSIONPAY_SECRET_KEY');
 
-    if (!secretKey || !companyId) {
-      throw new Error('GhostsPay credentials not configured');
+    if (!publicKey || !secretKey) {
+      throw new Error('FusionPay credentials not configured');
     }
 
-    // Create Basic Auth credentials
-    const credentials = btoa(`${secretKey}:${companyId}`);
+    // Create Basic Auth credentials (publicKey:secretKey)
+    const credentials = btoa(`${publicKey}:${secretKey}`);
 
-    // Call GhostsPay API to create PIX transaction
-    const response = await fetch('https://api.ghostspaysv2.com/functions/v1/transactions', {
+    // Convert amount to cents (FusionPay expects amount in centavos)
+    const amountInCents = Math.round(amount * 100);
+
+    // Call FusionPay API to create PIX transaction
+    const response = await fetch('https://api.fusionpaybr.com.br/v1/transactions', {
       method: 'POST',
       headers: {
         'Authorization': `Basic ${credentials}`,
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
       body: JSON.stringify({
-        amount: amount,
+        amount: amountInCents,
+        paymentMethod: 'pix',
+        pix: {
+          expiresIn: 3600, // 1 hora de expiração
+        },
+        items: [
+          {
+            title: 'Taxa Alfandegária',
+            unitPrice: amountInCents,
+            quantity: 1,
+            tangible: false,
+          },
+        ],
         customer: {
           name: customerName,
           email: customerEmail,
-          document: customerCpf,
+          document: customerCpf.replace(/\D/g, ''), // Remove formatação do CPF
         },
-        paymentMethod: 'pix',
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('GhostsPay API error:', response.status, errorText);
-      throw new Error(`GhostsPay API error: ${response.status} - ${errorText}`);
+      console.error('FusionPay API error:', response.status, errorText);
+      throw new Error(`FusionPay API error: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();
