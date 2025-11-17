@@ -61,7 +61,10 @@ serve(async (req) => {
         customer: {
           name: customerName,
           email: customerEmail,
-          document: customerCpf.replace(/\D/g, ''), // Remove formatação do CPF
+          document: {
+            type: 'cpf',
+            number: customerCpf.replace(/\D/g, ''), // Remove formatação do CPF
+          },
         },
       }),
     });
