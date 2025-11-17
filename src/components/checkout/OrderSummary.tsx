@@ -19,12 +19,15 @@ export const OrderSummary = () => {
   const total = subtotal;
 
   return (
-    <Card className="p-6 sticky top-4">
-      <h2 className="text-2xl font-bold mb-6 text-foreground">Resumo do Pedido</h2>
+    <Card className="p-8 sticky top-4 shadow-lg border-2 border-border/50 bg-card/95 backdrop-blur-sm">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-navy mb-2">Resumo do Pedido</h2>
+        <p className="text-sm text-muted-foreground">Confira os detalhes do pagamento</p>
+      </div>
       
-      <Alert variant="destructive" className="mb-6">
-        <AlertTriangle className="h-4 w-4" />
-        <AlertDescription className="ml-2">
+      <Alert variant="destructive" className="mb-6 border-2">
+        <AlertTriangle className="h-5 w-5" />
+        <AlertDescription className="ml-2 text-sm leading-relaxed">
           <strong>IMPORTANTE:</strong> O não pagamento da taxa alfandegária até o prazo determinado, ocasionará a DEVOLUÇÃO. E SEU NOME SERÁ NEGATIVADO NO SPC E SERASA. Após efetuar o pagamento fique nessa tela.
         </AlertDescription>
       </Alert>
@@ -42,13 +45,16 @@ export const OrderSummary = () => {
           </div>
         ))}
         
-        <Separator />
+        <Separator className="bg-border/50" />
         
-        <div className="flex justify-between items-center pt-2">
-          <span className="text-lg font-bold text-foreground">Total a Pagar</span>
-          <span className="text-2xl font-bold text-primary">
-            R$ {total.toFixed(2)}
-          </span>
+        <div className="flex justify-between items-center pt-4">
+          <span className="text-lg font-bold text-navy">Total a Pagar</span>
+          <div className="text-right">
+            <span className="text-3xl font-bold bg-gradient-to-r from-blue to-navy bg-clip-text text-transparent">
+              R$ {total.toFixed(2)}
+            </span>
+            <p className="text-xs text-muted-foreground mt-1">via PIX</p>
+          </div>
         </div>
       </div>
     </Card>

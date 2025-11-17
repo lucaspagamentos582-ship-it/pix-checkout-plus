@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { QRCodeSVG } from "qrcode.react";
-import { Copy, CheckCircle, Loader2, Clock } from "lucide-react";
+import { Copy, CheckCircle, Loader2, Clock, AlertTriangle } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -126,10 +126,13 @@ export const PixPayment = ({ amount, customerName, customerEmail, customerCpf }:
 
   if (loading) {
     return (
-      <Card className="p-6">
-        <div className="flex flex-col items-center justify-center py-12">
-          <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
-          <p className="text-muted-foreground">Gerando seu PIX...</p>
+      <Card className="p-8 shadow-lg border-2 border-border/50 bg-card/95 backdrop-blur-sm">
+        <div className="flex flex-col items-center justify-center py-16">
+          <div className="relative">
+            <div className="absolute inset-0 bg-blue/20 blur-xl rounded-full animate-pulse" />
+            <Loader2 className="h-16 w-16 animate-spin text-blue relative z-10" />
+          </div>
+          <p className="text-muted-foreground mt-6 text-lg">Gerando seu PIX...</p>
         </div>
       </Card>
     );
@@ -137,10 +140,13 @@ export const PixPayment = ({ amount, customerName, customerEmail, customerCpf }:
 
   if (error) {
     return (
-      <Card className="p-6">
-        <div className="flex flex-col items-center justify-center py-12">
-          <p className="text-destructive text-center mb-4">{error}</p>
-          <p className="text-sm text-muted-foreground text-center">
+      <Card className="p-8 shadow-lg border-2 border-destructive/50 bg-card/95 backdrop-blur-sm">
+        <div className="flex flex-col items-center justify-center py-16">
+          <div className="bg-destructive/10 rounded-full p-4 mb-4">
+            <AlertTriangle className="h-12 w-12 text-destructive" />
+          </div>
+          <p className="text-destructive text-center mb-4 text-lg font-semibold">{error}</p>
+          <p className="text-sm text-muted-foreground text-center max-w-md">
             Por favor, tente novamente ou entre em contato com o suporte.
           </p>
         </div>
@@ -149,31 +155,32 @@ export const PixPayment = ({ amount, customerName, customerEmail, customerCpf }:
   }
 
   return (
-    <Card className="p-6">
+    <Card className="p-8 shadow-lg border-2 border-border/50 bg-card/95 backdrop-blur-sm">
       <div className="flex items-center justify-center mb-6">
-        <div className="bg-primary/10 rounded-full p-3">
-          <CheckCircle className="h-8 w-8 text-primary" />
+        <div className="bg-gradient-to-br from-blue to-blue/80 rounded-full p-4 shadow-blue">
+          <CheckCircle className="h-10 w-10 text-white" />
         </div>
       </div>
       
-      <h2 className="text-2xl font-bold text-center mb-2 text-foreground">
-        Pagamento via PIX
-      </h2>
-      
-      <p className="text-center text-muted-foreground mb-6">
-        Escaneie o QR Code ou copie o código para pagar
-      </p>
+      <div className="text-center mb-6">
+        <h2 className="text-3xl font-bold text-navy mb-2">
+          Pagamento via PIX
+        </h2>
+        <p className="text-muted-foreground">
+          Escaneie o QR Code ou copie o código para pagar
+        </p>
+      </div>
 
       {/* Countdown Timer */}
       {expirationDate && (
-        <div className={`mb-6 p-4 rounded-lg border-2 ${isExpired ? 'bg-destructive/10 border-destructive' : 'bg-primary/10 border-primary'}`}>
-          <div className="flex items-center justify-center gap-2">
-            <Clock className={`h-5 w-5 ${isExpired ? 'text-destructive' : 'text-primary'}`} />
+        <div className={`mb-8 p-6 rounded-xl border-2 shadow-lg ${isExpired ? 'bg-destructive/10 border-destructive shadow-destructive/20' : 'bg-gradient-to-br from-yellow/20 to-blue/10 border-yellow shadow-yellow/20'}`}>
+          <div className="flex items-center justify-center gap-3">
+            <Clock className={`h-6 w-6 ${isExpired ? 'text-destructive' : 'text-blue'}`} />
             <div className="text-center">
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm font-medium text-navy mb-1">
                 {isExpired ? 'PIX Expirado' : 'Tempo restante'}
               </p>
-              <p className={`text-2xl font-bold ${isExpired ? 'text-destructive' : 'text-primary'}`}>
+              <p className={`text-3xl font-bold ${isExpired ? 'text-destructive' : 'bg-gradient-to-r from-blue to-navy bg-clip-text text-transparent'}`}>
                 {timeRemaining}
               </p>
             </div>
@@ -182,11 +189,11 @@ export const PixPayment = ({ amount, customerName, customerEmail, customerCpf }:
       )}
 
       {qrCodeData && !isExpired && (
-        <div className="flex justify-center mb-6">
-          <div className="bg-white p-4 rounded-lg shadow-md">
+        <div className="flex justify-center mb-8">
+          <div className="bg-white p-6 rounded-2xl shadow-xl border-4 border-blue/20">
             <QRCodeSVG
               value={qrCodeData}
-              size={200}
+              size={220}
               level="H"
               includeMargin={true}
             />
@@ -196,26 +203,25 @@ export const PixPayment = ({ amount, customerName, customerEmail, customerCpf }:
 
       {pixCode && !isExpired && (
         <>
-          <div className="bg-muted rounded-lg p-4 mb-4">
-            <p className="text-sm text-muted-foreground mb-2">Código PIX</p>
-            <p className="text-xs font-mono break-all text-foreground">
+          <div className="bg-muted/50 backdrop-blur-sm rounded-xl p-5 mb-5 border border-border/50">
+            <p className="text-sm font-semibold text-navy mb-3">Código PIX</p>
+            <p className="text-xs font-mono break-all text-foreground leading-relaxed">
               {pixCode}
             </p>
           </div>
 
           <Button
             onClick={handleCopyPixCode}
-            variant="outline"
-            className="w-full"
+            className="w-full h-12 text-base font-semibold bg-gradient-to-r from-yellow to-yellow/90 hover:from-yellow/90 hover:to-yellow text-navy shadow-yellow transition-all duration-300 hover:scale-[1.02]"
           >
             {copied ? (
               <>
-                <CheckCircle className="mr-2 h-4 w-4 text-primary" />
+                <CheckCircle className="mr-2 h-5 w-5" />
                 Código Copiado!
               </>
             ) : (
               <>
-                <Copy className="mr-2 h-4 w-4" />
+                <Copy className="mr-2 h-5 w-5" />
                 Copiar Código PIX
               </>
             )}
@@ -224,19 +230,18 @@ export const PixPayment = ({ amount, customerName, customerEmail, customerCpf }:
       )}
 
       {isExpired && (
-        <div className="text-center p-6 bg-destructive/10 rounded-lg">
-          <p className="text-destructive font-semibold mb-2">PIX Expirado</p>
+        <div className="text-center p-8 bg-destructive/10 rounded-xl border-2 border-destructive">
+          <p className="text-destructive font-bold text-lg mb-2">PIX Expirado</p>
           <p className="text-sm text-muted-foreground">
             Este código PIX expirou. Por favor, atualize a página para gerar um novo.
           </p>
         </div>
       )}
 
-      <div className="mt-6 p-4 bg-secondary/20 rounded-lg border-2 border-secondary">
-        <p className="text-sm text-center text-foreground">
-          <span className="font-semibold">Valor a pagar:</span>
-          <br />
-          <span className="text-2xl font-bold text-primary">
+      <div className="mt-8 p-5 bg-gradient-to-br from-blue/10 to-yellow/10 rounded-xl border-2 border-blue/30 shadow-md">
+        <p className="text-sm text-center text-navy font-medium">
+          <span className="font-bold text-lg block mb-1">Valor a pagar:</span>
+          <span className="text-3xl font-bold bg-gradient-to-r from-blue to-navy bg-clip-text text-transparent">
             R$ {amount.toFixed(2)}
           </span>
         </p>

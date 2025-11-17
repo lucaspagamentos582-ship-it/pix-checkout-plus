@@ -32,19 +32,24 @@ const Index = () => {
   const totalAmount = 214.80;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/10">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-[length:100%_auto] bg-no-repeat" style={{ background: 'linear-gradient(180deg, hsl(var(--accent)) 0%, hsl(var(--background)) 40%, hsl(var(--background)) 100%)' }}>
+      <div className="container mx-auto px-4 py-12">
         {/* Header */}
-        <div className="flex items-center justify-center mb-8">
-          <div className="flex flex-col items-center gap-4">
-            <img 
-              src={logo} 
-              alt="Taxa Alfandegaria" 
-              className="h-20 w-auto drop-shadow-lg"
-            />
-            <div className="text-center">
-              <h1 className="text-3xl font-bold text-navy">Taxa Alfandegaria</h1>
-              <p className="text-muted-foreground">Pagamento de Taxa de Importação</p>
+        <div className="flex items-center justify-center mb-12">
+          <div className="flex flex-col items-center gap-6">
+            <div className="relative">
+              <div className="absolute inset-0 bg-yellow/20 blur-2xl rounded-full" />
+              <img 
+                src={logo} 
+                alt="Taxa Alfandegaria" 
+                className="h-24 w-auto drop-shadow-2xl relative z-10"
+              />
+            </div>
+            <div className="text-center space-y-2">
+              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-navy via-blue to-navy bg-clip-text text-transparent">
+                Taxa Alfandegaria
+              </h1>
+              <p className="text-muted-foreground text-lg">Pagamento de Taxa de Importação</p>
             </div>
           </div>
         </div>
@@ -80,13 +85,13 @@ const Index = () => {
         )}
 
         {/* Footer */}
-        <div className="mt-12 text-center space-y-3">
-          <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-            <div className="h-1 w-1 rounded-full bg-primary animate-pulse" />
-            <span>Ambiente 100% seguro</span>
+        <div className="mt-16 text-center space-y-4">
+          <div className="inline-flex items-center gap-3 px-6 py-3 bg-card/80 backdrop-blur-sm rounded-full border border-blue/20 shadow-md">
+            <div className="h-2 w-2 rounded-full bg-blue animate-pulse shadow-blue" />
+            <span className="text-sm font-medium text-navy">Ambiente 100% seguro</span>
           </div>
-          <div className="text-sm text-muted-foreground">
-            <p className="font-semibold text-navy">Taxa Alfandegaria</p>
+          <div className="text-sm text-muted-foreground space-y-1">
+            <p className="font-bold text-navy text-base">Taxa Alfandegaria</p>
             <p>CNPJ: 34.028.316/0001-03</p>
           </div>
         </div>
