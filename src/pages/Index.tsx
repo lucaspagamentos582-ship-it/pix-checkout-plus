@@ -39,12 +39,12 @@ const Index = () => {
           <div className="flex flex-col items-center gap-4">
             <img 
               src={logo} 
-              alt="Logo" 
+              alt="Taxa Alfandegaria" 
               className="h-20 w-auto drop-shadow-lg"
             />
             <div className="text-center">
-              <h1 className="text-3xl font-bold text-navy">Checkout Seguro</h1>
-              <p className="text-muted-foreground">Finalize sua compra com PIX</p>
+              <h1 className="text-3xl font-bold text-navy">Taxa Alfandegaria</h1>
+              <p className="text-muted-foreground">Pagamento de Taxa de Importação</p>
             </div>
           </div>
         </div>
@@ -78,10 +78,14 @@ const Index = () => {
         )}
 
         {/* Footer */}
-        <div className="mt-12 text-center">
+        <div className="mt-12 text-center space-y-3">
           <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
             <div className="h-1 w-1 rounded-full bg-primary animate-pulse" />
             <span>Ambiente 100% seguro</span>
+          </div>
+          <div className="text-sm text-muted-foreground">
+            <p className="font-semibold text-navy">Taxa Alfandegaria</p>
+            <p>CNPJ: 34.028.316/0001-03</p>
           </div>
         </div>
       </div>
