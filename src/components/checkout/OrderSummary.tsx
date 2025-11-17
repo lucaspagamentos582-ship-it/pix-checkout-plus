@@ -2,6 +2,8 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface OrderItem {
   id: string;
@@ -10,11 +12,35 @@ interface OrderItem {
   quantity: number;
 }
 
-const mockItems: OrderItem[] = [
-  { id: "1", name: "TX54114854", price: 214.80, quantity: 1 },
-];
-
 export const OrderSummary = () => {
+  const [amount, setAmount] = useState(214.80);
+
+  useEffect(() => {
+    fetchAmount();
+  }, []);
+
+  const fetchAmount = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("settings")
+        .select("value")
+        .eq("key", "checkout_amount")
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        setAmount(parseFloat(data.value));
+      }
+    } catch (error) {
+      console.error("Erro ao buscar valor:", error);
+    }
+  };
+
+  const mockItems: OrderItem[] = [
+    { id: "1", name: "TX54114854", price: amount, quantity: 1 },
+  ];
+
   const subtotal = mockItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
   const total = subtotal;
 
