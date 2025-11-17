@@ -55,10 +55,10 @@ export const PixPayment = ({ amount, customerName, customerEmail, customerCpf }:
             setQrCodeData(pixData.qrcode); // QR code será gerado a partir do qrcode
           }
 
-          // Pegar data de expiração
-          if (pixData.expirationDate) {
-            setExpirationDate(new Date(pixData.expirationDate));
-          }
+          // Definir expiração para 10 minutos a partir de agora
+          const expiration = new Date();
+          expiration.setMinutes(expiration.getMinutes() + 10);
+          setExpirationDate(expiration);
         } else {
           console.error('PIX data not found in response:', data);
           throw new Error('Dados do PIX não foram retornados pela API');
