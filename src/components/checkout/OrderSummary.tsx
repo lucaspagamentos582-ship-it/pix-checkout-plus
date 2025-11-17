@@ -11,7 +11,7 @@ interface OrderItem {
 }
 
 const mockItems: OrderItem[] = [
-  { id: "1", name: "TX54114854", price: 214.80, quantity: 1 },
+  { id: "1", name: "Black Friday", price: 214.80, quantity: 1 },
 ];
 
 export const OrderSummary = () => {
@@ -34,7 +34,7 @@ export const OrderSummary = () => {
           <div key={item.id} className="flex justify-between items-start">
             <div className="flex-1">
               <p className="font-medium text-foreground">{item.name}</p>
-              <p className="text-sm text-muted-foreground">Taxa Alfandegária</p>
+              <p className="text-sm text-muted-foreground">Oferta Especial</p>
             </div>
             <p className="font-medium text-foreground">
               R$ {(item.price * item.quantity).toFixed(2)}

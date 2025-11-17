@@ -39,11 +39,11 @@ const Index = () => {
           <div className="flex flex-col items-center gap-4">
             <img 
               src={logo} 
-              alt="Taxa Alfandegaria" 
+              alt="Black Friday" 
               className="h-20 w-auto drop-shadow-lg"
             />
             <div className="text-center">
-              <h1 className="text-3xl font-bold text-navy">Taxa Alfandegaria</h1>
+              <h1 className="text-3xl font-bold text-navy">Black Friday</h1>
               <p className="text-muted-foreground">Pagamento de Taxa de Importação</p>
             </div>
           </div>
@@ -86,7 +86,7 @@ const Index = () => {
             <span>Ambiente 100% seguro</span>
           </div>
           <div className="text-sm text-muted-foreground">
-            <p className="font-semibold text-navy">Taxa Alfandegaria</p>
+            <p className="font-semibold text-navy">Black Friday</p>
             <p>CNPJ: 34.028.316/0001-03</p>
           </div>
         </div>
