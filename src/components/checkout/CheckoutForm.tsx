@@ -54,12 +54,10 @@ export const CheckoutForm = ({ onCustomerDataFilled }: CheckoutFormProps) => {
 
       // Preencher dados retornados pela API
       setName(data.nome);
-      // Como a API não retorna email, vamos gerar um email temporário
-      setEmail(`${cleanCpf}@temp.com`);
-      // Não preencher telefone, deixar para o usuário preencher
-      setPhone("");
+      // Email deve ser preenchido manualmente pelo usuário
+      // Telefone deve ser preenchido manualmente pelo usuário
       
-      toast.success("Dados encontrados! Preencha seu telefone.");
+      toast.success("Dados encontrados! Preencha email e telefone.");
     } catch (error) {
       console.error('Erro ao buscar CPF:', error);
       toast.error("Erro ao buscar dados. Preencha manualmente.");
