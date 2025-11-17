@@ -29,7 +29,7 @@ const Index = () => {
     setShowPayment(true);
   };
 
-  const totalAmount = 214.80; // Subtotal (199.70) + Frete (15.00)
+  const totalAmount = 214.80;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/10">
