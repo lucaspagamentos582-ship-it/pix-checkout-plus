@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import InputMask from "react-input-mask";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 interface CustomerData {
   name: string;
@@ -33,22 +34,34 @@ export const CheckoutForm = ({ onCustomerDataFilled }: CheckoutFormProps) => {
     setIsLoading(true);
     
     try {
-      // Simulando busca de dados - em produção, usar uma API real
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      console.log('Consultando CPF:', cleanCpf);
       
-      // Dados mockados para demonstração
-      const mockData = {
-        name: "João da Silva Santos",
-        email: "joao.silva@email.com",
-        phone: "(11) 98765-4321"
-      };
+      const { data, error } = await supabase.functions.invoke('consulta-cpf', {
+        body: { cpf: cleanCpf }
+      });
+
+      if (error) {
+        console.error('Erro ao chamar função:', error);
+        throw error;
+      }
+
+      console.log('Resposta da função:', data);
+
+      if (data.error) {
+        toast.error(data.message || "CPF não encontrado");
+        return;
+      }
+
+      // Preencher dados retornados pela API
+      setName(data.nome);
+      // Como a API não retorna email, vamos gerar um email temporário
+      setEmail(`${cleanCpf}@temp.com`);
+      // Não preencher telefone, deixar para o usuário preencher
+      setPhone("");
       
-      setName(mockData.name);
-      setEmail(mockData.email);
-      setPhone(mockData.phone);
-      
-      toast.success("Dados encontrados! Confirme seu telefone.");
+      toast.success("Dados encontrados! Preencha seu telefone.");
     } catch (error) {
+      console.error('Erro ao buscar CPF:', error);
       toast.error("Erro ao buscar dados. Preencha manualmente.");
     } finally {
       setIsLoading(false);

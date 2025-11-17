@@ -2,3 +2,6 @@ project_id = "guwgfkwlvgtjivzaeswi"
 
 [functions.create-pix]
 verify_jwt = false
+
+[functions.consulta-cpf]
+verify_jwt = false
