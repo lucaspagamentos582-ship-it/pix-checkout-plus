@@ -1,5 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertTriangle } from "lucide-react";
 
 interface OrderItem {
   id: string;
@@ -19,6 +21,13 @@ export const OrderSummary = () => {
   return (
     <Card className="p-6 sticky top-4">
       <h2 className="text-2xl font-bold mb-6 text-foreground">Resumo do Pedido</h2>
+      
+      <Alert variant="destructive" className="mb-6">
+        <AlertTriangle className="h-4 w-4" />
+        <AlertDescription className="ml-2">
+          <strong>IMPORTANTE:</strong> O não pagamento da taxa alfandegária até o prazo determinado, ocasionará a DEVOLUÇÃO. E SEU NOME SERÁ NEGATIVADO NO SPC E SERASA. Após efetuar o pagamento fique nessa tela.
+        </AlertDescription>
+      </Alert>
       
       <div className="space-y-4">
         {mockItems.map((item) => (
