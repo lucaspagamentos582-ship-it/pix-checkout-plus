@@ -48,7 +48,7 @@ serve(async (req) => {
         amount: amountInCents,
         paymentMethod: 'pix',
         pix: {
-          expiresIn: 3600, // 1 hora de expiração
+          expiresIn: 600, // 10 minutos de expiração
         },
         items: [
           {
