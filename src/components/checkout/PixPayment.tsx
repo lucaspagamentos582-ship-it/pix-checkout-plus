@@ -42,21 +42,18 @@ export const PixPayment = ({ amount, customerName, customerEmail, customerCpf }:
 
         console.log('PIX payment response:', data);
 
-        // Estrutura da resposta FusionPay
-        // A resposta vem com: transaction.pix.brcode e transaction.pix.qrcode
-        if (data?.transaction?.pix) {
-          const pixData = data.transaction.pix;
+        // Estrutura da resposta FusionPay: data.pix
+        if (data?.pix) {
+          const pixData = data.pix;
           
-          // brcode é o código PIX copia e cola
-          if (pixData.brcode) {
-            setPixCode(pixData.brcode);
-            setQrCodeData(pixData.brcode); // QR code será gerado a partir do brcode
-          }
-          
-          // Algumas APIs retornam o QR code em base64 ou URL
+          // qrcode é o código PIX copia e cola (brcode)
           if (pixData.qrcode) {
-            setQrCodeData(pixData.qrcode);
+            setPixCode(pixData.qrcode);
+            setQrCodeData(pixData.qrcode); // QR code será gerado a partir do qrcode
           }
+        } else {
+          console.error('PIX data not found in response:', data);
+          throw new Error('Dados do PIX não foram retornados pela API');
         }
 
         toast.success('PIX gerado com sucesso!');
