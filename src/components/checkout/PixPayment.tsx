@@ -42,13 +42,21 @@ export const PixPayment = ({ amount, customerName, customerEmail, customerCpf }:
 
         console.log('PIX payment response:', data);
 
-        // Ajuste aqui de acordo com a estrutura real da resposta da API GhostsPay
-        // Exemplo presumido:
-        if (data.pixCode) {
-          setPixCode(data.pixCode);
-        }
-        if (data.qrCode) {
-          setQrCodeData(data.qrCode);
+        // Estrutura da resposta FusionPay
+        // A resposta vem com: transaction.pix.brcode e transaction.pix.qrcode
+        if (data?.transaction?.pix) {
+          const pixData = data.transaction.pix;
+          
+          // brcode é o código PIX copia e cola
+          if (pixData.brcode) {
+            setPixCode(pixData.brcode);
+            setQrCodeData(pixData.brcode); // QR code será gerado a partir do brcode
+          }
+          
+          // Algumas APIs retornam o QR code em base64 ou URL
+          if (pixData.qrcode) {
+            setQrCodeData(pixData.qrcode);
+          }
         }
 
         toast.success('PIX gerado com sucesso!');
