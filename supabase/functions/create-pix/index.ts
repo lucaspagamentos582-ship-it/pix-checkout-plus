@@ -26,6 +26,10 @@ serve(async (req) => {
     const publicKey = Deno.env.get('FUSIONPAY_PUBLIC_KEY');
     const secretKey = Deno.env.get('FUSIONPAY_SECRET_KEY');
 
+    console.log('Verificando credenciais FusionPay...');
+    console.log('Public Key presente:', !!publicKey);
+    console.log('Secret Key presente:', !!secretKey);
+
     if (!publicKey || !secretKey) {
       throw new Error('FusionPay credentials not configured');
     }
