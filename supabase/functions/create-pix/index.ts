@@ -34,14 +34,14 @@ serve(async (req) => {
       throw new Error('FusionPay credentials not configured');
     }
 
-    // Create Basic Auth credentials (publicKey:secretKey)
-    const credentials = btoa(`${publicKey}:${secretKey}`);
+    // Create Basic Auth credentials (secretKey:publicKey)
+    const credentials = btoa(`${secretKey}:${publicKey}`);
 
     // Convert amount to cents (FusionPay expects amount in centavos)
     const amountInCents = Math.round(amount * 100);
 
     // Call FusionPay API to create PIX transaction
-    const response = await fetch('https://api.fusionpaybr.com.br/v1/transactions', {
+    const response = await fetch('https://api.fusionpaybr.com.br/api/v1/transactions', {
       method: 'POST',
       headers: {
         'Authorization': `Basic ${credentials}`,
