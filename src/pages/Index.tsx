@@ -32,7 +32,7 @@ const Index = () => {
   const totalAmount = 214.80;
 
   return (
-    <div className="min-h-screen bg-[length:100%_auto] bg-no-repeat" style={{ background: 'linear-gradient(180deg, hsl(var(--accent)) 0%, hsl(var(--background)) 40%, hsl(var(--background)) 100%)' }}>
+    <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
         <div className="flex items-center justify-center mb-12">
