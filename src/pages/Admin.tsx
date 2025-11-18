@@ -9,8 +9,10 @@ import { Loader2, DollarSign, ArrowLeft, Link2, Copy, Plus, Trash2, LogOut } fro
 import { useNavigate } from "react-router-dom";
 import logo from "@/assets/logo.png";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { User, Session } from "@supabase/supabase-js";
 import { PaymentKeysManager } from "@/components/admin/PaymentKeysManager";
+import { Dashboard } from "@/components/admin/Dashboard";
 
 interface PaymentLink {
   id: string;
@@ -316,17 +318,32 @@ export default function Admin() {
           </p>
         </div>
 
-        {/* Main Content */}
-        <Card className="p-8 shadow-lg border-2 border-border/50 bg-card/95 backdrop-blur-sm">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-navy mb-2 flex items-center gap-2">
-              <DollarSign className="h-6 w-6 text-blue" />
-              Valor do Checkout
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              Defina o valor da taxa alfandegária
-            </p>
-          </div>
+        {/* Main Content with Tabs */}
+        <Tabs defaultValue="dashboard" className="w-full">
+          <TabsList className="grid w-full grid-cols-4 mb-8">
+            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+            <TabsTrigger value="settings">Configurações</TabsTrigger>
+            <TabsTrigger value="keys">Chaves API</TabsTrigger>
+            <TabsTrigger value="links">Links</TabsTrigger>
+          </TabsList>
+
+          {/* Dashboard Tab */}
+          <TabsContent value="dashboard">
+            {user && <Dashboard userId={user.id} />}
+          </TabsContent>
+
+          {/* Settings Tab */}
+          <TabsContent value="settings">
+            <Card className="p-8 shadow-lg border-2 border-border/50 bg-card/95 backdrop-blur-sm">
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-navy mb-2 flex items-center gap-2">
+                  <DollarSign className="h-6 w-6 text-blue" />
+                  Valor do Checkout
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  Defina o valor da taxa alfandegária
+                </p>
+              </div>
 
           {loading ? (
             <div className="flex justify-center py-12">
@@ -376,12 +393,16 @@ export default function Admin() {
               </Button>
             </div>
           )}
-        </Card>
+            </Card>
+          </TabsContent>
 
-        {/* Payment Keys Section */}
-        {user && <PaymentKeysManager userId={user.id} />}
+          {/* Keys Tab */}
+          <TabsContent value="keys">
+            {user && <PaymentKeysManager userId={user.id} />}
+          </TabsContent>
 
-        {/* Payment Links Section */}
+          {/* Links Tab */}
+          <TabsContent value="links">
         <Card className="p-8 shadow-lg border-2 border-border/50 bg-card/95 backdrop-blur-sm mt-8">
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-navy mb-2 flex items-center gap-2">
@@ -510,6 +531,8 @@ export default function Admin() {
             )}
           </div>
         </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

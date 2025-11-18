@@ -47,6 +47,65 @@ export type Database = {
         }
         Relationships: []
       }
+      payments: {
+        Row: {
+          amount: number
+          confirmed_at: string | null
+          created_at: string | null
+          customer_cpf: string
+          customer_email: string
+          customer_name: string
+          expires_at: string | null
+          fusion_transaction_id: string | null
+          id: string
+          payment_link_id: string | null
+          pix_code: string | null
+          status: string
+          transaction_id: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          confirmed_at?: string | null
+          created_at?: string | null
+          customer_cpf: string
+          customer_email: string
+          customer_name: string
+          expires_at?: string | null
+          fusion_transaction_id?: string | null
+          id?: string
+          payment_link_id?: string | null
+          pix_code?: string | null
+          status?: string
+          transaction_id?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          confirmed_at?: string | null
+          created_at?: string | null
+          customer_cpf?: string
+          customer_email?: string
+          customer_name?: string
+          expires_at?: string | null
+          fusion_transaction_id?: string | null
+          id?: string
+          payment_link_id?: string | null
+          pix_code?: string | null
+          status?: string
+          transaction_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_payment_link_id_fkey"
+            columns: ["payment_link_id"]
+            isOneToOne: false
+            referencedRelation: "payment_links"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       settings: {
         Row: {
           created_at: string | null
@@ -128,6 +187,7 @@ export type Database = {
     }
     Functions: {
       generate_payment_code: { Args: never; Returns: string }
+      get_user_dashboard_stats: { Args: { _user_id: string }; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
