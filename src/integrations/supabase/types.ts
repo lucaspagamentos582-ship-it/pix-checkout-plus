@@ -23,6 +23,7 @@ export type Database = {
           description: string | null
           id: string
           is_active: boolean
+          user_id: string | null
         }
         Insert: {
           access_count?: number
@@ -32,6 +33,7 @@ export type Database = {
           description?: string | null
           id?: string
           is_active?: boolean
+          user_id?: string | null
         }
         Update: {
           access_count?: number
@@ -41,6 +43,7 @@ export type Database = {
           description?: string | null
           id?: string
           is_active?: boolean
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -68,6 +71,33 @@ export type Database = {
           key?: string
           updated_at?: string | null
           value?: string
+        }
+        Relationships: []
+      }
+      user_payment_settings: {
+        Row: {
+          created_at: string | null
+          fusionpay_public_key: string | null
+          fusionpay_secret_key: string | null
+          id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          fusionpay_public_key?: string | null
+          fusionpay_secret_key?: string | null
+          id?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          fusionpay_public_key?: string | null
+          fusionpay_secret_key?: string | null
+          id?: string
+          updated_at?: string | null
+          user_id?: string
         }
         Relationships: []
       }
