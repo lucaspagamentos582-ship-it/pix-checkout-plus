@@ -137,7 +137,7 @@ export default function PaymentLink() {
           </div>
 
           <div>
-            <OrderSummary />
+            <OrderSummary amount={totalAmount} />
           </div>
         </div>
 
