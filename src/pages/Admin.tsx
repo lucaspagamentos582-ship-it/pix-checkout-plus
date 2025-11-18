@@ -363,7 +363,13 @@ export default function Admin() {
                           {link.description}
                         </p>
                       )}
-                      <p className="text-xs text-muted-foreground">
+                      <div className="mt-2 p-2 bg-muted/50 rounded border border-border/30">
+                        <p className="text-xs text-muted-foreground mb-1">Link de pagamento:</p>
+                        <code className="text-xs text-blue break-all">
+                          {window.location.origin}/pagar/{link.code}
+                        </code>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-2">
                         Acessos: {link.access_count} | Criado em: {new Date(link.created_at).toLocaleDateString('pt-BR')}
                       </p>
                     </div>
