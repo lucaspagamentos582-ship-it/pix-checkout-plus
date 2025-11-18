@@ -5,10 +5,11 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Loader2, DollarSign, ArrowLeft, Link2, Copy, Plus, Trash2 } from "lucide-react";
+import { Loader2, DollarSign, ArrowLeft, Link2, Copy, Plus, Trash2, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import logo from "@/assets/logo.png";
 import { Separator } from "@/components/ui/separator";
+import type { User, Session } from "@supabase/supabase-js";
 
 interface PaymentLink {
   id: string;
@@ -22,6 +23,10 @@ interface PaymentLink {
 
 export default function Admin() {
   const navigate = useNavigate();
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -34,9 +39,80 @@ export default function Admin() {
   const [creatingLink, setCreatingLink] = useState(false);
 
   useEffect(() => {
-    fetchCurrentAmount();
-    fetchPaymentLinks();
-  }, []);
+    // Configurar listener de auth PRIMEIRO
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        
+        // Verificar role admin quando session mudar
+        if (session?.user) {
+          setTimeout(() => {
+            checkAdminRole(session.user.id);
+          }, 0);
+        } else {
+          setIsAdmin(false);
+          setCheckingAuth(false);
+        }
+      }
+    );
+
+    // DEPOIS verificar sessão existente
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      
+      if (session?.user) {
+        checkAdminRole(session.user.id);
+      } else {
+        setCheckingAuth(false);
+        navigate("/auth");
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
+  const checkAdminRole = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .rpc('is_admin', { _user_id: userId });
+
+      if (error) {
+        console.error("Erro ao verificar role:", error);
+        toast.error("Erro ao verificar permissões");
+        navigate("/auth");
+        return;
+      }
+
+      if (!data) {
+        toast.error("Acesso negado. Você não tem permissão de administrador.");
+        navigate("/");
+        return;
+      }
+
+      setIsAdmin(true);
+      setCheckingAuth(false);
+      
+      // Carregar dados apenas se for admin
+      fetchCurrentAmount();
+      fetchPaymentLinks();
+    } catch (error) {
+      console.error("Erro ao verificar admin:", error);
+      navigate("/auth");
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      toast.success("Logout realizado com sucesso");
+      navigate("/auth");
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error);
+      toast.error("Erro ao fazer logout");
+    }
+  };
 
   const fetchCurrentAmount = async () => {
     try {
@@ -180,6 +256,21 @@ export default function Admin() {
     }
   };
 
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <Loader2 className="h-12 w-12 animate-spin text-blue mx-auto" />
+          <p className="text-muted-foreground">Verificando permissões...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-12 max-w-2xl">
@@ -195,6 +286,15 @@ export default function Admin() {
           </Button>
 
           <img src={logo} alt="Logo" className="h-16 w-auto" />
+
+          <Button
+            variant="outline"
+            onClick={handleLogout}
+            className="gap-2"
+          >
+            <LogOut className="h-4 w-4" />
+            Sair
+          </Button>
         </div>
 
         <div className="text-center mb-8">
