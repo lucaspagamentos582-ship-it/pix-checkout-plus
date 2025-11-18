@@ -24,7 +24,7 @@ interface PaymentLink {
   created_at: string;
 }
 
-export default function Admin() {
+export default function Submundo() {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -285,7 +285,7 @@ export default function Admin() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-12 max-w-2xl">
+      <div className="container mx-auto px-4 py-12 max-w-6xl">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <Button
@@ -403,7 +403,7 @@ export default function Admin() {
 
           {/* Links Tab */}
           <TabsContent value="links">
-        <Card className="p-8 shadow-lg border-2 border-border/50 bg-card/95 backdrop-blur-sm mt-8">
+        <Card className="p-8 shadow-lg border-2 border-border/50 bg-card/95 backdrop-blur-sm">
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-navy mb-2 flex items-center gap-2">
               <Link2 className="h-6 w-6 text-blue" />
@@ -444,10 +444,10 @@ export default function Admin() {
                 />
               </div>
             </div>
-            <Button 
+            <Button
               onClick={handleCreateLink}
-              disabled={creatingLink}
-              className="w-full md:w-auto"
+              disabled={creatingLink || !newLinkAmount}
+              className="w-full"
             >
               {creatingLink ? (
                 <>
@@ -463,67 +463,69 @@ export default function Admin() {
             </Button>
           </div>
 
-          <Separator className="my-6" />
+          <Separator className="my-8" />
 
-          {/* Links List */}
-          <div>
-            <h3 className="font-semibold text-lg mb-4">Links Criados</h3>
+          {/* Existing Links */}
+          <div className="space-y-4">
+            <h3 className="font-semibold text-lg">Links Criados</h3>
             {loadingLinks ? (
-              <div className="flex justify-center py-8">
+              <div className="flex justify-center py-12">
                 <Loader2 className="h-8 w-8 animate-spin text-blue" />
               </div>
             ) : paymentLinks.length === 0 ? (
-              <p className="text-center text-muted-foreground py-8">
-                Nenhum link criado ainda
+              <p className="text-center text-muted-foreground py-12">
+                Nenhum link criado ainda. Crie seu primeiro link acima!
               </p>
             ) : (
-              <div className="space-y-3">
+              <div className="grid gap-4">
                 {paymentLinks.map((link) => (
-                  <div 
+                  <div
                     key={link.id}
-                    className="flex items-center justify-between p-4 bg-background rounded-lg border border-border/50 hover:border-blue/50 transition-colors"
+                    className="p-6 bg-card border-2 border-border/50 rounded-lg shadow-md hover:shadow-lg transition-shadow"
                   >
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <code className="text-sm font-mono font-semibold text-blue">
-                          {link.code}
-                        </code>
-                        <span className="text-lg font-bold text-navy">
-                          R$ {link.amount.toFixed(2)}
-                        </span>
-                      </div>
-                      {link.description && (
-                        <p className="text-sm text-muted-foreground mb-1">
-                          {link.description}
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <code className="text-sm font-mono font-semibold text-blue">
+                            {link.code}
+                          </code>
+                          <span className="text-lg font-bold text-navy">
+                            R$ {link.amount.toFixed(2)}
+                          </span>
+                        </div>
+                        {link.description && (
+                          <p className="text-sm text-muted-foreground mb-1">
+                            {link.description}
+                          </p>
+                        )}
+                        <div className="mt-2 p-2 bg-muted/50 rounded border border-border/30">
+                          <p className="text-xs text-muted-foreground mb-1">Link de pagamento:</p>
+                          <code className="text-xs text-blue break-all">
+                            {window.location.origin}/pagar/{link.code}
+                          </code>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-2">
+                          Acessos: {link.access_count} | Criado em: {new Date(link.created_at).toLocaleDateString('pt-BR')}
                         </p>
-                      )}
-                      <div className="mt-2 p-2 bg-muted/50 rounded border border-border/30">
-                        <p className="text-xs text-muted-foreground mb-1">Link de pagamento:</p>
-                        <code className="text-xs text-blue break-all">
-                          {window.location.origin}/pagar/{link.code}
-                        </code>
                       </div>
-                      <p className="text-xs text-muted-foreground mt-2">
-                        Acessos: {link.access_count} | Criado em: {new Date(link.created_at).toLocaleDateString('pt-BR')}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2 ml-4">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleCopyLink(link.code)}
-                        className="gap-2"
-                      >
-                        <Copy className="h-4 w-4" />
-                        Copiar Link
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => handleDeleteLink(link.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      <div className="flex gap-2 ml-4">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleCopyLink(link.code)}
+                          className="gap-2"
+                        >
+                          <Copy className="h-4 w-4" />
+                          Copiar Link
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => handleDeleteLink(link.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -537,3 +539,4 @@ export default function Admin() {
     </div>
   );
 }
+
