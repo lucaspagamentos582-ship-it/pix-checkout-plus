@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      payment_links: {
+        Row: {
+          access_count: number
+          amount: number
+          code: string
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+        }
+        Insert: {
+          access_count?: number
+          amount: number
+          code: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+        }
+        Update: {
+          access_count?: number
+          amount?: number
+          code?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+        }
+        Relationships: []
+      }
       settings: {
         Row: {
           created_at: string | null
@@ -46,7 +76,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_payment_code: { Args: never; Returns: string }
     }
     Enums: {
       [_ in never]: never
