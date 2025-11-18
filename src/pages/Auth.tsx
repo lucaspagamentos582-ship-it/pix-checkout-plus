@@ -22,7 +22,7 @@ export default function Auth() {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        navigate("/admin");
+        navigate("/submundo");
       }
       setCheckingAuth(false);
     };
@@ -62,13 +62,13 @@ export default function Auth() {
         }
 
         toast.success("Login realizado com sucesso!");
-        navigate("/admin");
+        navigate("/submundo");
       } else {
         const { error } = await supabase.auth.signUp({
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/admin`,
+            emailRedirectTo: `${window.location.origin}/submundo`,
           },
         });
 
