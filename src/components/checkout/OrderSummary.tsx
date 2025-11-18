@@ -12,30 +12,11 @@ interface OrderItem {
   quantity: number;
 }
 
-export const OrderSummary = () => {
-  const [amount, setAmount] = useState(214.80);
+interface OrderSummaryProps {
+  amount: number;
+}
 
-  useEffect(() => {
-    fetchAmount();
-  }, []);
-
-  const fetchAmount = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("settings")
-        .select("value")
-        .eq("key", "checkout_amount")
-        .single();
-
-      if (error) throw error;
-
-      if (data) {
-        setAmount(parseFloat(data.value));
-      }
-    } catch (error) {
-      console.error("Erro ao buscar valor:", error);
-    }
-  };
+export const OrderSummary = ({ amount }: OrderSummaryProps) => {
 
   const mockItems: OrderItem[] = [
     { id: "1", name: "TX54114854", price: amount, quantity: 1 },
