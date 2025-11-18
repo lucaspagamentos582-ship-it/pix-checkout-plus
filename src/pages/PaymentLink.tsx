@@ -132,6 +132,7 @@ export default function PaymentLink() {
                 customerName={customerData?.name || "Cliente"}
                 customerEmail={customerData?.email || ""}
                 customerCpf={customerData?.cpf || ""}
+                paymentLinkCode={code}
               />
             )}
           </div>

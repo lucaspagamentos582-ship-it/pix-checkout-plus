@@ -11,9 +11,10 @@ interface PixPaymentProps {
   customerName: string;
   customerEmail: string;
   customerCpf: string;
+  paymentLinkCode?: string;
 }
 
-export const PixPayment = ({ amount, customerName, customerEmail, customerCpf }: PixPaymentProps) => {
+export const PixPayment = ({ amount, customerName, customerEmail, customerCpf, paymentLinkCode }: PixPaymentProps) => {
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(true);
   const [pixCode, setPixCode] = useState<string>("");
@@ -35,6 +36,7 @@ export const PixPayment = ({ amount, customerName, customerEmail, customerCpf }:
             customerName,
             customerEmail,
             customerCpf,
+            paymentLinkCode,
           },
         });
 
@@ -76,7 +78,7 @@ export const PixPayment = ({ amount, customerName, customerEmail, customerCpf }:
     };
 
     createPixPayment();
-  }, [amount, customerName, customerEmail, customerCpf]);
+  }, [amount, customerName, customerEmail, customerCpf, paymentLinkCode]);
 
   // Countdown timer
   useEffect(() => {

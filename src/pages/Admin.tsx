@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import logo from "@/assets/logo.png";
 import { Separator } from "@/components/ui/separator";
 import type { User, Session } from "@supabase/supabase-js";
+import { PaymentKeysManager } from "@/components/admin/PaymentKeysManager";
 
 interface PaymentLink {
   id: string;
@@ -162,11 +163,14 @@ export default function Admin() {
   };
 
   const fetchPaymentLinks = async () => {
+    if (!user?.id) return;
+    
     try {
       setLoadingLinks(true);
       const { data, error } = await supabase
         .from("payment_links")
         .select("*")
+        .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -206,6 +210,11 @@ export default function Admin() {
       return;
     }
 
+    if (!user?.id) {
+      toast.error("Usuário não autenticado");
+      return;
+    }
+
     try {
       setCreatingLink(true);
 
@@ -217,6 +226,7 @@ export default function Admin() {
           code,
           amount: parseFloat(newLinkAmount),
           description: newLinkDescription || null,
+          user_id: user.id,
         });
 
       if (error) throw error;
@@ -367,6 +377,9 @@ export default function Admin() {
             </div>
           )}
         </Card>
+
+        {/* Payment Keys Section */}
+        {user && <PaymentKeysManager userId={user.id} />}
 
         {/* Payment Links Section */}
         <Card className="p-8 shadow-lg border-2 border-border/50 bg-card/95 backdrop-blur-sm mt-8">
