@@ -118,12 +118,6 @@ const Index = () => {
           <div className="text-sm text-muted-foreground space-y-1">
             <p className="font-bold text-navy text-base">Taxa Alfandegaria</p>
             <p>CNPJ: 34.028.316/0001-03</p>
-            <button
-              onClick={() => window.location.href = '/admin'}
-              className="text-xs text-muted-foreground/50 hover:text-muted-foreground mt-2 transition-colors"
-            >
-              Admin
-            </button>
           </div>
         </div>
       </div>
