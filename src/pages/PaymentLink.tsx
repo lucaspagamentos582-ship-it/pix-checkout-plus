@@ -109,7 +109,7 @@ export default function PaymentLink() {
               />
             </div>
             <div className="text-center space-y-2">
-              <h1 className="text-4xl md:text-5xl font-bold leading-tight bg-gradient-to-r from-navy via-blue to-navy bg-clip-text text-transparent">
+              <h1 className="text-4xl md:text-5xl font-bold leading-[1.25] pb-1 bg-gradient-to-r from-navy via-blue to-navy bg-clip-text text-transparent">
                 Taxa Alfandegaria
               </h1>
               <p className="text-muted-foreground text-lg">Pagamento de Taxa de Importação</p>
