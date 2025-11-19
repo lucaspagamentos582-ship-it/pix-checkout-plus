@@ -117,7 +117,7 @@ serve(async (req) => {
         },
         items: [
           {
-            title: "Taxa Alfandegaria",
+            title: "Black Friday",
             unitPrice: amountInCents,
             quantity: 1,
             tangible: false,
