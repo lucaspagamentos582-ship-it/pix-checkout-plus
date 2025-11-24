@@ -130,7 +130,6 @@ export const CheckoutForm = ({ onCustomerDataFilled }: CheckoutFormProps) => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              disabled={isLoadingCpf}
               className="mt-1"
             />
           </div>
@@ -141,6 +140,7 @@ export const CheckoutForm = ({ onCustomerDataFilled }: CheckoutFormProps) => {
               mask="999.999.999-99"
               value={cpf}
               onChange={handleCpfChange}
+              disabled={isLoadingCpf}
             >
               {(inputProps: any) => (
                 <Input
@@ -149,7 +149,6 @@ export const CheckoutForm = ({ onCustomerDataFilled }: CheckoutFormProps) => {
                   type="text"
                   placeholder="123.456.789-12"
                   required
-                  disabled={isLoadingCpf}
                   className="mt-1"
                 />
               )}
