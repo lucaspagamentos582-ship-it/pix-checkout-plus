@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import InputMask from "react-input-mask";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { PixIcon } from "@/components/icons/PixIcon";
+import pixLogo from "@/assets/pix-logo.png";
 
 interface CustomerData {
   name: string;
@@ -163,10 +163,7 @@ export const CheckoutForm = ({ onCustomerDataFilled }: CheckoutFormProps) => {
           <h2 className="text-lg font-semibold mb-4">Pagamento</h2>
           
           <div className="border-2 border-[#32BCAD] rounded-md p-3 mb-4 inline-block">
-            <div className="flex items-center gap-2">
-              <PixIcon size={24} className="text-[#32BCAD]" />
-              <span className="text-sm text-gray-600">pix</span>
-            </div>
+            <img src={pixLogo} alt="PIX" className="h-8 w-auto" />
           </div>
 
           <div className="border border-gray-300 rounded-md p-4 mb-6">
