@@ -222,7 +222,7 @@ export const PixPayment = ({ amount, customerName, customerEmail, customerCpf, p
           </div>
 
           {/* Right Column - Details */}
-          <div>
+          <div className="sticky top-8">
             <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
               <h3 className="text-gray-700 font-semibold mb-4">Detalhes da compra:</h3>
               
