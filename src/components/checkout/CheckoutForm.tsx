@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import InputMask from "react-input-mask";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { PixIcon } from "@/components/icons/PixIcon";
 
 interface CustomerData {
   name: string;
@@ -163,7 +164,7 @@ export const CheckoutForm = ({ onCustomerDataFilled }: CheckoutFormProps) => {
           
           <div className="border-2 border-blue-500 rounded-lg p-4 mb-4">
             <div className="flex items-center gap-3">
-              <div className="text-2xl">💳</div>
+              <PixIcon size={32} className="text-[#32BCAD]" />
               <span className="font-medium">PIX</span>
             </div>
           </div>
