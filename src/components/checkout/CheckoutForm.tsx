@@ -2,8 +2,7 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 import InputMask from "react-input-mask";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -24,45 +23,36 @@ export const CheckoutForm = ({ onCustomerDataFilled }: CheckoutFormProps) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingCpf, setIsLoadingCpf] = useState(false);
 
   const fetchCustomerData = async (cpfValue: string) => {
     const cleanCpf = cpfValue.replace(/\D/g, "");
     
     if (cleanCpf.length !== 11) return;
 
-    setIsLoading(true);
+    setIsLoadingCpf(true);
     
     try {
-      console.log('Consultando CPF:', cleanCpf);
-      
       const { data, error } = await supabase.functions.invoke('consulta-cpf', {
         body: { cpf: cleanCpf }
       });
 
       if (error) {
-        console.error('Erro ao chamar função:', error);
         throw error;
       }
-
-      console.log('Resposta da função:', data);
 
       if (data.error) {
         toast.error(data.message || "CPF não encontrado");
         return;
       }
 
-      // Preencher dados retornados pela API
       setName(data.nome);
-      // Email deve ser preenchido manualmente pelo usuário
-      // Telefone deve ser preenchido manualmente pelo usuário
-      
       toast.success("Dados encontrados! Preencha email e telefone.");
     } catch (error) {
       console.error('Erro ao buscar CPF:', error);
       toast.error("Erro ao buscar dados. Preencha manualmente.");
     } finally {
-      setIsLoading(false);
+      setIsLoadingCpf(false);
     }
   };
 
@@ -93,90 +83,106 @@ export const CheckoutForm = ({ onCustomerDataFilled }: CheckoutFormProps) => {
   };
 
   return (
-    <Card className="p-8 shadow-lg border-2 border-border/50 bg-card/95 backdrop-blur-sm">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-navy mb-2">Informações do Cliente</h2>
-        <p className="text-sm text-muted-foreground">Preencha seus dados para prosseguir</p>
-      </div>
+    <Card className="p-6 bg-white shadow-sm border border-gray-200">
+      <h2 className="text-lg font-semibold mb-4">Identificação</h2>
       
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="cpf">CPF</Label>
-          <InputMask
-            mask="999.999.999-99"
-            value={cpf}
-            onChange={handleCpfChange}
-            disabled={isLoading}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="email" className="text-sm font-normal text-gray-700">E-mail</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="email@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="mt-1"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="phone" className="text-sm font-normal text-gray-700">Telefone</Label>
+            <InputMask
+              mask="(99) 99999-9999"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            >
+              {(inputProps: any) => (
+                <Input
+                  {...inputProps}
+                  id="phone"
+                  type="tel"
+                  placeholder="(99) 99999-9999"
+                  required
+                  className="mt-1"
+                />
+              )}
+            </InputMask>
+          </div>
+
+          <div>
+            <Label htmlFor="name" className="text-sm font-normal text-gray-700">Nome completo</Label>
+            <Input
+              id="name"
+              type="text"
+              placeholder="Nome e Sobrenome"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              disabled={isLoadingCpf}
+              className="mt-1"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="cpf" className="text-sm font-normal text-gray-700">CPF/CNPJ</Label>
+            <InputMask
+              mask="999.999.999-99"
+              value={cpf}
+              onChange={handleCpfChange}
+            >
+              {(inputProps: any) => (
+                <Input
+                  {...inputProps}
+                  id="cpf"
+                  type="text"
+                  placeholder="123.456.789-12"
+                  required
+                  disabled={isLoadingCpf}
+                  className="mt-1"
+                />
+              )}
+            </InputMask>
+          </div>
+        </div>
+
+        <Separator className="my-6" />
+
+        <div>
+          <h2 className="text-lg font-semibold mb-4">Pagamento</h2>
+          
+          <div className="border-2 border-blue-500 rounded-lg p-4 mb-4">
+            <div className="flex items-center gap-3">
+              <div className="text-2xl">💳</div>
+              <span className="font-medium">PIX</span>
+            </div>
+          </div>
+
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
+            <p className="text-sm text-gray-600">
+              Ao selecionar o Pix, você será encaminhado para um ambiente seguro para finalizar seu pagamento.
+            </p>
+          </div>
+
+          <button
+            type="submit"
+            disabled={isLoadingCpf}
+            className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-4 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {(inputProps: any) => (
-              <Input
-                {...inputProps}
-                id="cpf"
-                placeholder="000.000.000-00"
-                required
-              />
-            )}
-          </InputMask>
+            {isLoadingCpf ? "Carregando..." : "GERAR PIX"}
+          </button>
         </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="name">Nome Completo</Label>
-          <Input
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Seu nome completo"
-            required
-            disabled={isLoading}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="email">E-mail</Label>
-          <Input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="seu@email.com"
-            required
-            disabled={isLoading}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="phone">Telefone</Label>
-          <InputMask
-            mask="(99) 99999-9999"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            disabled={isLoading}
-          >
-            {(inputProps: any) => (
-              <Input
-                {...inputProps}
-                id="phone"
-                placeholder="(00) 00000-0000"
-                required
-              />
-            )}
-          </InputMask>
-        </div>
-
-        <Button 
-          type="submit" 
-          className="w-full h-12 text-base font-semibold bg-gradient-to-r from-blue to-blue/90 hover:from-blue/90 hover:to-blue shadow-blue transition-all duration-300 hover:scale-[1.02]"
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-              Buscando dados...
-            </>
-          ) : (
-            "Continuar para Pagamento"
-          )}
-        </Button>
       </form>
     </Card>
   );
