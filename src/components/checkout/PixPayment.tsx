@@ -1,10 +1,11 @@
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { QRCodeSVG } from "qrcode.react";
-import { Copy, CheckCircle, Loader2, Clock, AlertTriangle } from "lucide-react";
+import { Copy, CheckCircle, Loader2, AlertTriangle } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import correiosIcon from "@/assets/logo.png";
+import pixLogo from "@/assets/pix-logo.png";
 
 interface PixPaymentProps {
   amount: number;
@@ -45,24 +46,18 @@ export const PixPayment = ({ amount, customerName, customerEmail, customerCpf, p
           throw new Error(functionError.message || 'Erro ao criar pagamento PIX');
         }
 
-        console.log('PIX payment response:', data);
-
-        // Estrutura da resposta FusionPay: data.pix
         if (data?.pix) {
           const pixData = data.pix;
           
-          // qrcode é o código PIX copia e cola (brcode)
           if (pixData.qrcode) {
             setPixCode(pixData.qrcode);
-            setQrCodeData(pixData.qrcode); // QR code será gerado a partir do qrcode
+            setQrCodeData(pixData.qrcode);
           }
 
-          // Definir expiração para 10 minutos a partir de agora
           const expiration = new Date();
           expiration.setMinutes(expiration.getMinutes() + 10);
           setExpirationDate(expiration);
         } else {
-          console.error('PIX data not found in response:', data);
           throw new Error('Dados do PIX não foram retornados pela API');
         }
 
@@ -80,7 +75,6 @@ export const PixPayment = ({ amount, customerName, customerEmail, customerCpf, p
     createPixPayment();
   }, [amount, customerName, customerEmail, customerCpf, paymentLinkCode]);
 
-  // Countdown timer
   useEffect(() => {
     if (!expirationDate) return;
 
@@ -90,22 +84,13 @@ export const PixPayment = ({ amount, customerName, customerEmail, customerCpf, p
 
       if (diff <= 0) {
         setIsExpired(true);
-        setTimeRemaining("Expirado");
+        setTimeRemaining("00:00");
         return;
       }
 
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-      if (days > 0) {
-        setTimeRemaining(`${days}d ${hours}h ${minutes}m`);
-      } else if (hours > 0) {
-        setTimeRemaining(`${hours}h ${minutes}m ${seconds}s`);
-      } else {
-        setTimeRemaining(`${minutes}m ${seconds}s`);
-      }
+      setTimeRemaining(`${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`);
     };
 
     updateCountdown();
@@ -128,130 +113,178 @@ export const PixPayment = ({ amount, customerName, customerEmail, customerCpf, p
 
   if (loading) {
     return (
-      <Card className="p-8 shadow-lg border-2 border-border/50 bg-card/95 backdrop-blur-sm">
-        <div className="flex flex-col items-center justify-center py-16">
-          <div className="relative">
-            <div className="absolute inset-0 bg-blue/20 blur-xl rounded-full animate-pulse" />
-            <Loader2 className="h-16 w-16 animate-spin text-blue relative z-10" />
+      <div className="bg-gray-100 min-h-screen p-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex flex-col items-center justify-center py-16">
+            <Loader2 className="h-16 w-16 animate-spin text-[#00C851]" />
+            <p className="text-gray-600 mt-6 text-lg">Gerando seu PIX...</p>
           </div>
-          <p className="text-muted-foreground mt-6 text-lg">Gerando seu PIX...</p>
         </div>
-      </Card>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <Card className="p-8 shadow-lg border-2 border-destructive/50 bg-card/95 backdrop-blur-sm">
-        <div className="flex flex-col items-center justify-center py-16">
-          <div className="bg-destructive/10 rounded-full p-4 mb-4">
-            <AlertTriangle className="h-12 w-12 text-destructive" />
+      <div className="bg-gray-100 min-h-screen p-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex flex-col items-center justify-center py-16">
+            <AlertTriangle className="h-12 w-12 text-red-500 mb-4" />
+            <p className="text-red-500 text-center mb-4 text-lg font-semibold">{error}</p>
+            <p className="text-sm text-gray-600 text-center max-w-md">
+              Por favor, tente novamente ou entre em contato com o suporte.
+            </p>
           </div>
-          <p className="text-destructive text-center mb-4 text-lg font-semibold">{error}</p>
-          <p className="text-sm text-muted-foreground text-center max-w-md">
-            Por favor, tente novamente ou entre em contato com o suporte.
-          </p>
         </div>
-      </Card>
+      </div>
     );
   }
 
   return (
-    <Card className="p-8 shadow-lg border-2 border-border/50 bg-card/95 backdrop-blur-sm">
-      <div className="flex items-center justify-center mb-6">
-        <div className="bg-gradient-to-br from-blue to-blue/80 rounded-full p-4 shadow-blue">
-          <CheckCircle className="h-10 w-10 text-white" />
-        </div>
-      </div>
-      
-      <div className="text-center mb-6">
-        <h2 className="text-3xl font-bold text-navy mb-2">
-          Pagamento via PIX
-        </h2>
-        <p className="text-muted-foreground">
-          Escaneie o QR Code ou copie o código para pagar
-        </p>
+    <div className="bg-gray-100 min-h-screen">
+      {/* Header */}
+      <div className="bg-white shadow-sm py-4 px-8">
+        <img src={correiosIcon} alt="Correios" className="h-8 w-auto" />
       </div>
 
-      {/* Countdown Timer */}
-      {expirationDate && (
-        <div className={`mb-8 p-6 rounded-xl border-2 shadow-lg ${isExpired ? 'bg-destructive/10 border-destructive shadow-destructive/20' : 'bg-gradient-to-br from-yellow/20 to-blue/10 border-yellow shadow-yellow/20'}`}>
-          <div className="flex items-center justify-center gap-3">
-            <Clock className={`h-6 w-6 ${isExpired ? 'text-destructive' : 'text-blue'}`} />
-            <div className="text-center">
-              <p className="text-sm font-medium text-navy mb-1">
-                {isExpired ? 'PIX Expirado' : 'Tempo restante'}
+      {/* Main Content */}
+      <div className="max-w-6xl mx-auto py-8 px-4">
+        <h1 className="text-center text-2xl font-semibold text-gray-700 mb-8">
+          Falta pouco! Para finalizar a compra,<br />escaneie o QR Code abaixo.
+        </h1>
+
+        <div className="grid lg:grid-cols-2 gap-8">
+          {/* Left Column - QR Code */}
+          <div className="bg-white rounded-lg shadow-sm p-8">
+            {/* Timer */}
+            <div className="text-center mb-6">
+              <p className="text-gray-600 mb-2">
+                O código expira em: <span className="text-red-600 font-semibold">{timeRemaining}</span>
               </p>
-              <p className={`text-3xl font-bold ${isExpired ? 'text-destructive' : 'bg-gradient-to-r from-blue to-navy bg-clip-text text-transparent'}`}>
-                {timeRemaining}
-              </p>
+            </div>
+
+            {/* QR Code */}
+            {qrCodeData && !isExpired && (
+              <div className="flex justify-center mb-8">
+                <div className="bg-white p-4">
+                  <QRCodeSVG
+                    value={qrCodeData}
+                    size={280}
+                    level="H"
+                    includeMargin={false}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* PIX Code */}
+            {pixCode && !isExpired && (
+              <div>
+                <p className="text-center text-gray-700 mb-3 font-medium">
+                  Se preferir, pague com a opção PIX Copia e Cola:
+                </p>
+                
+                <div className="bg-white border border-gray-300 rounded-md p-3 mb-4">
+                  <p className="text-xs font-mono break-all text-gray-700">
+                    {pixCode}
+                  </p>
+                </div>
+
+                <div className="flex justify-center">
+                  <button
+                    onClick={handleCopyPixCode}
+                    className="bg-[#00C851] hover:bg-[#00B347] text-white font-semibold py-3 px-8 rounded-md transition-colors inline-flex items-center gap-2"
+                  >
+                    {copied ? (
+                      <>
+                        <CheckCircle className="h-5 w-5" />
+                        CÓDIGO COPIADO
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="h-5 w-5" />
+                        COPIAR CÓDIGO
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {isExpired && (
+              <div className="text-center p-8 bg-red-50 rounded-xl border-2 border-red-200">
+                <p className="text-red-600 font-bold text-lg mb-2">PIX Expirado</p>
+                <p className="text-sm text-gray-600">
+                  Este código PIX expirou. Por favor, atualize a página para gerar um novo.
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Right Column - Details */}
+          <div>
+            <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+              <h3 className="text-gray-700 font-semibold mb-4">Detalhes da compra:</h3>
+              
+              <div className="mb-6">
+                <p className="text-gray-600 mb-2">
+                  Valor total: <span className="text-[#00C851] font-bold text-lg">R$ {amount.toFixed(2)}</span>
+                </p>
+              </div>
+
+              <div className="flex items-center mb-6">
+                <img src={correiosIcon} alt="Correios" className="h-12 w-auto" />
+              </div>
+
+              <h3 className="text-gray-700 font-semibold mb-4">Instruções para pagamento</h3>
+
+              <div className="space-y-4">
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0 w-10 h-10 bg-[#00C851] rounded-full flex items-center justify-center">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <p className="text-sm text-gray-600 pt-2">
+                    Abra o app do seu banco e entre no ambiente Pix
+                  </p>
+                </div>
+
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0 w-10 h-10 bg-[#00C851] rounded-full flex items-center justify-center">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                    </svg>
+                  </div>
+                  <p className="text-sm text-gray-600 pt-2">
+                    Escolha Pagar com QR Code e aponte a câmera para o código ao lado.
+                  </p>
+                </div>
+
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0 w-10 h-10 bg-[#00C851] rounded-full flex items-center justify-center">
+                    <CheckCircle className="w-6 h-6 text-white" />
+                  </div>
+                  <p className="text-sm text-gray-600 pt-2">
+                    Confirme as informações e finalize sua compra.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer Logos */}
+            <div className="flex items-center justify-center gap-4 mt-6">
+              <img src={pixLogo} alt="PIX" className="h-8 w-auto" />
+              <div className="flex items-center gap-2 text-gray-600 text-sm">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                Ambiente seguro
+              </div>
             </div>
           </div>
         </div>
-      )}
-
-      {qrCodeData && !isExpired && (
-        <div className="flex justify-center mb-8">
-          <div className="bg-white p-6 rounded-2xl shadow-xl border-4 border-blue/20">
-            <QRCodeSVG
-              value={qrCodeData}
-              size={220}
-              level="H"
-              includeMargin={true}
-            />
-          </div>
-        </div>
-      )}
-
-      {pixCode && !isExpired && (
-        <>
-          <div className="bg-muted/50 backdrop-blur-sm rounded-xl p-5 mb-5 border border-border/50">
-            <p className="text-sm font-semibold text-navy mb-3">Código PIX</p>
-            <p className="text-xs font-mono break-all text-foreground leading-relaxed">
-              {pixCode}
-            </p>
-          </div>
-
-          <Button
-            onClick={handleCopyPixCode}
-            className="w-full h-12 text-base font-semibold bg-gradient-to-r from-yellow to-yellow/90 hover:from-yellow/90 hover:to-yellow text-navy shadow-yellow transition-all duration-300 hover:scale-[1.02]"
-          >
-            {copied ? (
-              <>
-                <CheckCircle className="mr-2 h-5 w-5" />
-                Código Copiado!
-              </>
-            ) : (
-              <>
-                <Copy className="mr-2 h-5 w-5" />
-                Copiar Código PIX
-              </>
-            )}
-          </Button>
-        </>
-      )}
-
-      {isExpired && (
-        <div className="text-center p-8 bg-destructive/10 rounded-xl border-2 border-destructive">
-          <p className="text-destructive font-bold text-lg mb-2">PIX Expirado</p>
-          <p className="text-sm text-muted-foreground">
-            Este código PIX expirou. Por favor, atualize a página para gerar um novo.
-          </p>
-        </div>
-      )}
-
-      <div className="mt-8 p-5 bg-gradient-to-br from-blue/10 to-yellow/10 rounded-xl border-2 border-blue/30 shadow-md">
-        <p className="text-sm text-center text-navy font-medium">
-          <span className="font-bold text-lg block mb-1">Valor a pagar:</span>
-          <span className="text-3xl font-bold bg-gradient-to-r from-blue to-navy bg-clip-text text-transparent">
-            R$ {amount.toFixed(2)}
-          </span>
-        </p>
       </div>
-
-      <div className="mt-4 text-center text-sm text-muted-foreground">
-        O pagamento será confirmado automaticamente após a compensação
-      </div>
-    </Card>
+    </div>
   );
 };
