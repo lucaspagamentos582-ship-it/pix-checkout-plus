@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -174,15 +173,13 @@ export const CheckoutForm = ({ onCustomerDataFilled }: CheckoutFormProps) => {
           </div>
 
           <div className="flex justify-end">
-            <Button
+            <button
               type="submit"
               disabled={isLoadingCpf}
-              variant="success"
-              size="lg"
-              className="h-14 px-20 text-lg font-bold"
+              className="bg-[#00C851] hover:bg-[#00B347] text-white font-bold py-5 px-20 rounded-lg text-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
             >
               {isLoadingCpf ? "Carregando..." : "GERAR PIX"}
-            </Button>
+            </button>
           </div>
         </div>
       </form>
