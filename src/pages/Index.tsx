@@ -96,18 +96,19 @@ const Index = () => {
       ) : (
         <>
           <div className="container mx-auto px-4 py-8">
+            {/* Order Summary at Top */}
+            <div className="max-w-6xl mx-auto mb-8">
+              <OrderSummary amount={totalAmount} />
+            </div>
+
             {/* Main Content */}
-            <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            <div className="max-w-6xl mx-auto">
               <div className="space-y-6">
                 {!isProcessing ? (
                   <CheckoutForm onCustomerDataFilled={handleCustomerDataFilled} />
                 ) : customerData ? (
                   <ProcessingPayment customerData={customerData} />
                 ) : null}
-              </div>
-
-              <div>
-                <OrderSummary amount={totalAmount} />
               </div>
             </div>
 
