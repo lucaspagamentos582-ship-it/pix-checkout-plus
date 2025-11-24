@@ -193,7 +193,7 @@ export const PixPayment = ({ amount, customerName, customerEmail, customerCpf, p
                 <div className="flex justify-center">
                   <button
                     onClick={handleCopyPixCode}
-                    className="bg-[#00C851] hover:bg-[#00B347] text-white font-bold py-4 px-10 rounded-md transition-colors inline-flex items-center gap-2 text-base shadow-lg"
+                    className="bg-[#00C851] hover:bg-[#00B347] text-white font-semibold py-3 px-8 rounded-md transition-colors inline-flex items-center gap-2"
                   >
                     {copied ? (
                       <>
