@@ -162,26 +162,28 @@ export const CheckoutForm = ({ onCustomerDataFilled }: CheckoutFormProps) => {
         <div>
           <h2 className="text-lg font-semibold mb-4">Pagamento</h2>
           
-          <div className="border-2 border-blue-500 rounded-lg p-4 mb-4">
-            <div className="flex items-center gap-3">
-              <PixIcon size={32} className="text-[#32BCAD]" />
-              <span className="font-medium">PIX</span>
+          <div className="border-2 border-[#32BCAD] rounded-md p-3 mb-4 inline-block">
+            <div className="flex items-center gap-2">
+              <PixIcon size={24} className="text-[#32BCAD]" />
+              <span className="text-sm text-gray-600">pix</span>
             </div>
           </div>
 
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
+          <div className="border border-gray-300 rounded-md p-4 mb-6">
             <p className="text-sm text-gray-600">
               Ao selecionar o Pix, você será encaminhado para um ambiente seguro para finalizar seu pagamento.
             </p>
           </div>
 
-          <button
-            type="submit"
-            disabled={isLoadingCpf}
-            className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-4 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoadingCpf ? "Carregando..." : "GERAR PIX"}
-          </button>
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              disabled={isLoadingCpf}
+              className="bg-[#00C851] hover:bg-[#00B347] text-white font-semibold py-3 px-12 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoadingCpf ? "Carregando..." : "GERAR PIX"}
+            </button>
+          </div>
         </div>
       </form>
     </Card>
