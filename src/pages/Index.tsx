@@ -86,41 +86,43 @@ const Index = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
+      {showPayment ? (
+        <PixPayment 
+          amount={totalAmount}
+          customerName={customerData?.name || "Cliente"}
+          customerEmail={customerData?.email || ""}
+          customerCpf={customerData?.cpf || ""}
+        />
+      ) : (
+        <>
+          <div className="container mx-auto px-4 py-8">
+            {/* Main Content */}
+            <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+              <div className="space-y-6">
+                {!isProcessing ? (
+                  <CheckoutForm onCustomerDataFilled={handleCustomerDataFilled} />
+                ) : customerData ? (
+                  <ProcessingPayment customerData={customerData} />
+                ) : null}
+              </div>
 
-        {/* Main Content */}
-        <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-          <div className="space-y-6">
-            {!showPayment && !isProcessing ? (
-              <CheckoutForm onCustomerDataFilled={handleCustomerDataFilled} />
-            ) : isProcessing && customerData ? (
-              <ProcessingPayment customerData={customerData} />
-            ) : (
-              <PixPayment 
-                amount={totalAmount}
-                customerName={customerData?.name || "Cliente"}
-                customerEmail={customerData?.email || ""}
-                customerCpf={customerData?.cpf || ""}
+              <div>
+                <OrderSummary amount={totalAmount} />
+              </div>
+            </div>
+
+            {/* Phone Confirmation Modal */}
+            {customerData && (
+              <PhoneConfirmModal
+                isOpen={showPhoneModal}
+                initialPhone={customerData.phone}
+                onConfirm={handlePhoneConfirm}
+                onCancel={() => setShowPhoneModal(false)}
               />
             )}
           </div>
-
-          <div>
-            <OrderSummary amount={totalAmount} />
-          </div>
-        </div>
-
-        {/* Phone Confirmation Modal */}
-        {customerData && (
-          <PhoneConfirmModal
-            isOpen={showPhoneModal}
-            initialPhone={customerData.phone}
-            onConfirm={handlePhoneConfirm}
-            onCancel={() => setShowPhoneModal(false)}
-          />
-        )}
-
-      </div>
+        </>
+      )}
     </div>
   );
 };
