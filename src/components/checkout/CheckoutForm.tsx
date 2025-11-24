@@ -172,11 +172,11 @@ export const CheckoutForm = ({ onCustomerDataFilled }: CheckoutFormProps) => {
             </p>
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex md:justify-end">
             <button
               type="submit"
               disabled={isLoadingCpf}
-              className="bg-[#00C851] hover:bg-[#00B347] text-white font-semibold py-3 px-12 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full md:w-auto bg-[#00C851] hover:bg-[#00B347] text-white font-semibold py-3 px-12 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoadingCpf ? "Carregando..." : "GERAR PIX"}
             </button>
