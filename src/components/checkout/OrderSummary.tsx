@@ -1,6 +1,5 @@
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Info } from "lucide-react";
 import correiosIcon from "@/assets/logo.png";
 
 interface OrderItem {
@@ -25,11 +24,6 @@ export const OrderSummary = ({ amount }: OrderSummaryProps) => {
 
   return (
     <Card className="p-6 bg-white shadow-sm border border-gray-200">
-      <div className="flex items-center gap-2 mb-4">
-        <Info className="w-5 h-5 text-blue-500" />
-        <h2 className="text-lg font-semibold">Seu carrinho</h2>
-      </div>
-      
       <div className="space-y-4">
         {mockItems.map((item) => (
           <div key={item.id} className="flex gap-3">
