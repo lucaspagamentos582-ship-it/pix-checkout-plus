@@ -64,7 +64,7 @@ const Index = () => {
           <img 
             src={logo} 
             alt="Correios" 
-            className="h-30 w-auto"
+            className="h-24 w-auto"
           />
         </div>
       </div>
