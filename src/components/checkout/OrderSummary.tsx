@@ -1,7 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Info } from "lucide-react";
-import { TrustBadges } from "./TrustBadges";
 import correiosIcon from "@/assets/logo.png";
 
 interface OrderItem {
@@ -60,8 +59,6 @@ export const OrderSummary = ({ amount }: OrderSummaryProps) => {
           </div>
         </div>
       </div>
-
-      <TrustBadges />
     </Card>
   );
 };
