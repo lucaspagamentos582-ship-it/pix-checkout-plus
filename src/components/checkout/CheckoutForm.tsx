@@ -90,6 +90,40 @@ export const CheckoutForm = ({ onCustomerDataFilled }: CheckoutFormProps) => {
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
+            <Label htmlFor="cpf" className="text-sm font-normal text-gray-700">CPF/CNPJ</Label>
+            <InputMask
+              mask="999.999.999-99"
+              value={cpf}
+              onChange={handleCpfChange}
+              disabled={isLoadingCpf}
+            >
+              {(inputProps: any) => (
+                <Input
+                  {...inputProps}
+                  id="cpf"
+                  type="text"
+                  placeholder="123.456.789-12"
+                  required
+                  className="mt-1"
+                />
+              )}
+            </InputMask>
+          </div>
+
+          <div>
+            <Label htmlFor="name" className="text-sm font-normal text-gray-700">Nome completo</Label>
+            <Input
+              id="name"
+              type="text"
+              placeholder="Nome e Sobrenome"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              className="mt-1"
+            />
+          </div>
+
+          <div>
             <Label htmlFor="email" className="text-sm font-normal text-gray-700">E-mail</Label>
             <Input
               id="email"
@@ -115,40 +149,6 @@ export const CheckoutForm = ({ onCustomerDataFilled }: CheckoutFormProps) => {
                   id="phone"
                   type="tel"
                   placeholder="(99) 99999-9999"
-                  required
-                  className="mt-1"
-                />
-              )}
-            </InputMask>
-          </div>
-
-          <div>
-            <Label htmlFor="name" className="text-sm font-normal text-gray-700">Nome completo</Label>
-            <Input
-              id="name"
-              type="text"
-              placeholder="Nome e Sobrenome"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              className="mt-1"
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="cpf" className="text-sm font-normal text-gray-700">CPF/CNPJ</Label>
-            <InputMask
-              mask="999.999.999-99"
-              value={cpf}
-              onChange={handleCpfChange}
-              disabled={isLoadingCpf}
-            >
-              {(inputProps: any) => (
-                <Input
-                  {...inputProps}
-                  id="cpf"
-                  type="text"
-                  placeholder="123.456.789-12"
                   required
                   className="mt-1"
                 />
